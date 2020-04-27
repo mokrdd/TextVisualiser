@@ -19,8 +19,12 @@ Including another URLconf
 # Uncomment next two lines to enable admin:
 #from django.contrib import admin
 #from django.urls import path
+from django.conf.urls import url, include
+import VisualizerApp.views
 
 urlpatterns = [
     # Uncomment the next line to enable the admin:
     #path('admin/', admin.site.urls)
+    url(r'^$', VisualizerApp.views.index, name='index'),
+    url(r'^app$', VisualizerApp.views.app, name='app'),
 ]

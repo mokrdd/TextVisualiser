@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
+    'VisualizerApp',
     # Add your apps here to enable them
     'django.contrib.admin',
     'django.contrib.auth',

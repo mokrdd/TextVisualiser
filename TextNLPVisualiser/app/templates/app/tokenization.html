@@ -1,0 +1,26 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>Tokenization</h2>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Input</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="value"></textarea>
+        <button type="submit" class="btn btn-primary">Tokenize</button>
+    </div>
+</form>
+
+<div class="result_group">
+    <div class="block_header">
+        Result:
+    </div>
+    <div class="result_value">
+        {% for res in result%}
+          <div class="sentense"> - {{res}}</div><br/>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

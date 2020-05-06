@@ -48,6 +48,8 @@
     <Compile Include="app\nltk4russian-master\scripts\rus_to_open.py" />
     <Compile Include="app\nltk4russian-master\scripts\syntax.py" />
     <Compile Include="app\nltk4russian-master\scripts\train_tagger.py" />
+    <Compile Include="ERAFinder.py" />
+    <Compile Include="NLPHelper.py" />
     <Compile Include="syntax.py">
       <SubType>Code</SubType>
     </Compile>
@@ -60,6 +62,7 @@
     <Compile Include="TextNLPVisualiser\settings.py" />
     <Compile Include="TextNLPVisualiser\urls.py" />
     <Compile Include="TextNLPVisualiser\wsgi.py" />
+    <Compile Include="Tree.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />

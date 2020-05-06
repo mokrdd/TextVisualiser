@@ -2,4 +2,6 @@ django >= 2.1.6, < 3.0
 docutils
 nltk
 nltk.tokenize
-langdetect 
+langdetect
+pymorphy2
+nltk4russian

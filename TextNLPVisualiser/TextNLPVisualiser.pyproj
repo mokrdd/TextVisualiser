@@ -5,6 +5,8 @@
     <Name>TextNLPVisualiser</Name>
     <RootNamespace>TextNLPVisualiser</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -33,6 +35,22 @@
   <ItemGroup>
     <Compile Include="app\forms.py" />
     <Compile Include="app\models.py" />
+    <Compile Include="app\nltk4russian-master\build\lib\nltk4russian\tagger.py" />
+    <Compile Include="app\nltk4russian-master\build\lib\nltk4russian\util.py" />
+    <Compile Include="app\nltk4russian-master\build\lib\nltk4russian\__init__.py" />
+    <Compile Include="app\nltk4russian-master\nltk4russian\tagger.py" />
+    <Compile Include="app\nltk4russian-master\nltk4russian\util.py" />
+    <Compile Include="app\nltk4russian-master\nltk4russian\__init__.py" />
+    <Compile Include="app\nltk4russian-master\scripts\eval.py" />
+    <Compile Include="app\nltk4russian-master\nltk4russian\go.py" />
+    <Compile Include="app\nltk4russian-master\scripts\rabotaisuka.py" />
+    <Compile Include="app\nltk4russian-master\scripts\rnc_convert.py" />
+    <Compile Include="app\nltk4russian-master\scripts\rus_to_open.py" />
+    <Compile Include="app\nltk4russian-master\scripts\syntax.py" />
+    <Compile Include="app\nltk4russian-master\scripts\train_tagger.py" />
+    <Compile Include="syntax.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\tests.py" />
     <Compile Include="app\views.py" />
     <Compile Include="app\__init__.py" />
@@ -46,6 +64,13 @@
   <ItemGroup>
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
+    <Folder Include="app\nltk4russian-master\" />
+    <Folder Include="app\nltk4russian-master\build\" />
+    <Folder Include="app\nltk4russian-master\build\lib\" />
+    <Folder Include="app\nltk4russian-master\build\lib\nltk4russian\" />
+    <Folder Include="app\nltk4russian-master\data\" />
+    <Folder Include="app\nltk4russian-master\nltk4russian\" />
+    <Folder Include="app\nltk4russian-master\scripts\" />
     <Folder Include="app\static\" />
     <Folder Include="app\static\app\" />
     <Folder Include="app\static\app\content\" />
@@ -56,6 +81,23 @@
     <Folder Include="TextNLPVisualiser\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\nltk4russian-master\data\annot.opcorpora.no_ambig.xml" />
+    <Content Include="app\nltk4russian-master\data\input.txt" />
+    <Content Include="app\nltk4russian-master\data\media1.tab" />
+    <Content Include="app\nltk4russian-master\data\media2.tab" />
+    <Content Include="app\nltk4russian-master\data\media3.tab" />
+    <Content Include="app\nltk4russian-master\data\media_test.tab" />
+    <Content Include="app\nltk4russian-master\data\media_train.tab" />
+    <Content Include="app\nltk4russian-master\rules.txt" />
+    <Content Include="app\static\app\content\erd.css" />
+    <Content Include="app\static\app\content\joint.min.css" />
+    <Content Include="app\static\app\scripts\backbone-min.js" />
+    <Content Include="app\static\app\scripts\joint.min.js" />
+    <Content Include="app\static\app\scripts\erd.js" />
+    <Content Include="app\static\app\scripts\lodash.js" />
+    <Content Include="app\static\app\scripts\scripts.js" />
+    <Content Include="app\static\app\favicon.ico" />
+    <Content Include="app\templates\app\application.html" />
     <Content Include="app\templates\app\chunk.html" />
     <Content Include="app\templates\app\segmentation.html" />
     <Content Include="app\templates\app\tokenization.html" />

@@ -1,19 +1,15 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: #1D1E27;
+    color: white;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
+    
     padding-left: 15px;
     padding-right: 15px;
-}
-
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
 }
 
 /* styles for validation helpers */
@@ -39,4 +35,94 @@ input[type="checkbox"].input-validation-error {
 
 .validation-summary-valid {
     display: none;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.input_container, .input_backdrop, textarea {
+    width: 100%;
+    height: 220px;
+}
+
+.rounded {
+    width: 1000px;
+    border-radius: 18px;
+}
+
+.highlights, textarea {
+    padding: 10px;
+    font: 20px/28px 'Open Sans', sans-serif;
+    letter-spacing: 1px;
+}
+
+.input_container {
+    background: white;
+    display: block;
+    -webkit-text-size-adjust: none;
+}
+
+.input_window {
+    height: 280px;
+    background: #6657D0;
+}
+
+.input_backdrop {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+    transition: transform 1s;
+}
+
+.highlights {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: transparent;
+}
+
+textarea#value {
+    margin: auto;
+    display: block;
+    position: absolute;
+    background: transparent;
+    z-index: 2;
+    margin: 0;
+    color: #444;
+    overflow: hidden;
+    resize: none;
+    transition: transform 1s;
+}
+
+mark {
+    border-radius: 3px;
+    color: transparent;
+    background-color: #b1d5e5;
+}
+
+button {
+    border: none;
+    display: block;
+    width: 200px;
+    height: 40px;
+    margin: 10px 750px;
+    border-radius: 6px;
+    color: #4a418c;
+    background-color: #DADADE;
+    font: 18px 'Opens Sans', sans-serif;
+    letter-spacing: 1px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.tree {
+    margin-bottom:50px;
+}
+
+textarea:focus{
+    outline: none;
+    box-shadow: inset 0 0 10px #c6aada;
 }

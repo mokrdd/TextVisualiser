@@ -33,4 +33,6 @@ urlpatterns = [
     path('tokenization/', views.tokenization, name='tokenization' ),
     path('tagger/', views.tagger, name='tagger' ),
     path('chunk/', views.chunk, name='chunk' ),
+    path('application/', views.application, name='application' ),
+    path('application/process', views.process, name='process' ),
 ]

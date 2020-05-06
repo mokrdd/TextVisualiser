@@ -1,0 +1,33 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+
+<h2>Application</h2>
+
+<div class="row">
+    <div class="col">
+        <div class="input_window rounded">
+            <div class="input_container rounded">
+                <div class="input_backdrop rounded">
+                    <div class="highlights rounded">
+                    </div> 
+                </div>
+                <textarea id="value" class="rounded">
+        Каждому посетителю библиотеки выдаётся карточка, в которой хранится вся его информация: имя, фамилия и уникальный номер.        
+                </textarea>
+            </div>
+            <div class="input_window_footer">
+                <button class="process_button">Process</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row graph_container">
+    <div class="col">
+        <div id="paper">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

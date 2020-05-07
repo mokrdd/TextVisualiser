@@ -2,10 +2,11 @@ from nltk4russian.tagger import PMContextTagger
 from nltk4russian.util import read_corpus_to_nltk
 import requests
 import json
+import os
 
 class NLPHelper():
-    def __init__(self):
-        pass
+    def __init__(self,base_dir):
+        self.base_dir = base_dir
 
     def get_lemma(self,word):
         '''
@@ -25,11 +26,11 @@ class NLPHelper():
         res = json.loads(r.text)
         return res[0]["annotations"]["lemma"][0]["value"]
 
-    def tag_russian(self,words):
+    def tag_russian(self, words):
         '''
         Tags russian words
         '''
-        full_dir = 'data/media1.tab'
+        full_dir = os.path.join(self.base_dir, 'app\\nltk4russian-master\\data\\media1.tab')
         with open(full_dir, encoding='utf-8') as f:
             sentenses = list(read_corpus_to_nltk(f))
 

@@ -1,6 +1,4 @@
 from nltk import sent_tokenize
-from anytree import Node, RenderTree
-from anytree import findall,findall_by_attr
 from enum import Enum
 import sys
 sys.path.append(".")
@@ -8,71 +6,79 @@ from NLPHelper import NLPHelper
 from Tree import Tree
 
 class ERAFinder():
-    '''
-    Class for Entities, RelationShips and Attributes finding
-    '''
-    def __init__(self):
-        self.nlp_helper = NLPHelper()
+    def __init__(self,base_dir):
+        self.nlp_helper = NLPHelper(base_dir)
+        self.results = {}
+        self.base_dir = base_dir
     
-    def find_entity(self, parsed, main = True):
-        if(main):
-            type_ = 'предик'
-            #нахождение предикатов
-            predics = list(filter(lambda x: x["type"] == "предик", parsed))
-            words = list()
-            for pred in predics:
-                words.append(pred["value"])
+    def find_entity(self, tree, main = True, banned = None):
+        '''
+        '''
+        words = list()
+        found_nodes = list()
 
-            tagged = self.nlp_helper.tag_russian(words)
-            tagged_nouns = list(filter(lambda x: TagsHelper(x).get_pos()== POSEnum.NOUN.value ,tagged))
-            result_entity = {"raw": "","value":"", "type":"main"}
-            if len(tagged_nouns)==1:
-                word = TagsHelper(tagged_nouns[0])
-                result_entity["raw"] = word.word
-                #приводим к нормальной форме
-                if(word.get_case() != CaseEnum.NOMINATIVE.value or word.get_plur() != "sing"):
-                    lemma = self.nlp_helper.get_lemma(word.word)
-                    result_entity["value"] = lemma
-                else:
-                    result_entity["value"] = word.word
-                return result_entity    
+        if(main):
+            #нахождение предикатов
+            if banned is None:
+                tree.find_by_attr(tree, "type", "предик", found_nodes)
+            else:
+                tree.find_by_attr_banned(tree, "type", "предик", banned, found_nodes)
+    
         else:
             types = ["1-компл","2-компл","3-компл"]
-            compls = list(filter(lambda x: x["type"] in types, parsed))
-            words = list()
-            for c in compls:
-                words.append(c["value"])
 
-            tagged = self.nlp_helper.tag_russian(words)
-            tagged_nouns = list(filter(lambda x: TagsHelper(x).get_pos()== POSEnum.NOUN.value ,tagged))
-            result_entity = {"raw": "","value":"", "type":"depend"}
-            if len(tagged_nouns)==1:
-                word = TagsHelper(tagged_nouns[0])
-                result_entity["raw"] = word.word
-                #приводим к нормальной форме
-                if(word.get_case() != CaseEnum.NOMINATIVE.value or word.get_plur() != "sing"):
-                    lemma = self.nlp_helper.get_lemma(word.word)
-                    result_entity["value"] = lemma
+            for t in types:
+                if banned is None:
+                    tree.find_by_attr(tree, "type", t , found_nodes)
                 else:
-                    result_entity["value"] = word.word
-                return result_entity
+                    tree.find_by_attr_banned(tree, "type", t , banned, found_nodes)
 
-    def find_entities(self,parsed):
-        local_list = parsed.copy()
+        res_node = found_nodes[0]
+        if len(found_nodes) > 1:
+            print("More than 1 noun as entity:")
+            res_node = tree.closest_to(tree, found_nodes)
+            print("Closest is", res_node.value)
 
-        root_node = list(filter(lambda x: x["parent"]=="#",local_list))[0]
-        local_list.remove(root_node)
+        words.append(res_node.value["value"])
 
-        main_ent = self.find_entity(parsed, True)
-        print(main_ent)
+        tagged = self.nlp_helper.tag_russian(words)
+        tagged_nouns = list(filter(lambda x: TagsHelper(x).get_pos()== POSEnum.NOUN.value ,tagged))
+        result_entity = {"raw": "","value":""}
 
-        depend_ent = self.find_entity(parsed, False)
-        print(depend_ent)
+        word = TagsHelper(tagged_nouns[0])
+
+        #try to find adj 
+        adj = res_node.any_child_with_attr("type","опред")
+        adj_val = ""
+        if (adj is not None):
+            adj_val = adj.value["value"]
+
+        result_entity["raw"] = "{}{}".format(adj_val + " ", word.word)      
+        
+        #приводим к нормальной форме
+        if(word.get_case() != CaseEnum.NOMINATIVE.value or word.get_plur() != "sing"):
+            lemma = self.nlp_helper.get_lemma(word.word)
+            result_entity["value"] = lemma
+        else:
+            result_entity["value"] = word.word
+
+        return result_entity
+
+    def find_entities(self,tree,banned = None):
+        '''
+        Find entities for relation
+        ["main"] = main entity
+        ["depend"] = depend entity
+        '''
+        res = {"main": {} ,"depend": {} }
+        res["main"] = self.find_entity(tree, True, banned)
+        res["depend"] =  self.find_entity(tree, False, banned)
+        return res
         
     def find_attributes(self,parsed):
         return None
 
-    def find_relations(self,parsed):
+    def find_relations(self,parsed,main = True):
         root = parsed[0]
         word = self.nlp_helper.tag_russian(list({root["value"]}))
         th_root = TagsHelper(word[0])
@@ -83,44 +89,14 @@ class ERAFinder():
             print("Root is not verb")
 
     def create_parse_tree(self,values,parent_tree,parent_val):
+        '''
+        Creates Parse-Tree
+        '''
         childs = list(filter(lambda x: x["parent"] == parent_val,values))
         for c in childs:
             tree = Tree(c,parent_tree)
             parent_tree.add_child(tree)
             self.create_parse_tree(values,tree,c["value"])
-
-    def show_parse_tree(self,parsed):
-        '''
-        Builds parse-tree
-        '''
-        root = parsed[0]
-        t = TreeHelper(parsed,root,root["value"])
-        tree_root = Tree(root)
-        self.create_parse_tree(parsed,tree_root,root["value"])
-
-        # Найти все узлы sent-soch
-        sent_soch = list()
-        tree_root.find_by_attr(tree_root,"type","сент-соч",sent_soch)
-        for r in sent_soch:
-            print("сент-соч",r.value)
-        # 
-
-        # Найти все узлы relat
-        relat = list()
-        tree_root.find_by_attr(tree_root,"type","релят",relat)
-        for r in relat:
-            print("релят",r.value)
-        #
-
-        banned = sent_soch+relat
-        final_res = list()
-        tree_root.find_by_attr_banned(tree_root,"type","предик",banned,final_res)
-        for r in final_res:
-            print("предик финалОЧКА",r.value)   
-
-        for pre, fill, node in RenderTree(t.root):
-            #pass
-            print("%s%s" % (pre, node.name))
 
     def analize(self,sentense):
         '''
@@ -128,10 +104,42 @@ class ERAFinder():
         From sentense = 'sentense'
         '''
         parsed = self.nlp_helper.dependency_parse(sentense)
-        self.show_parse_tree(parsed)
-        entities = self.find_entities(parsed)
-        #attributes = self.find_attributes(parsed)
-        relations = self.find_relations(parsed)
+        result = list()
+        
+        #data tree
+        root = parsed[0]
+        tree_root = Tree(root)
+        self.create_parse_tree(parsed,tree_root,root["value"])
+
+        #find additional relations
+        #-nodes sent-soch
+        sent_soch_rel = list()
+        tree_root.find_by_attr(tree_root,"type","сент-соч",sent_soch_rel)
+
+        sent_soch_dicts = list()
+        for ss in sent_soch_rel:
+            ss_ents = self.find_entities(ss)
+            sent_soch_dicts.append({"relation" : ss.value["value"], "from":ss_ents["main"],"to":ss_ents["depend"]})
+
+        #-nodes relat
+        relat_rel = list()
+        tree_root.find_by_attr(tree_root,"type","релят",relat_rel)
+
+        relat_rel_dicts = list()
+        for r in relat_rel:
+            r_ents = self.find_entities(r)
+            relat_rel_dicts.append({"relation" : r.value["value"], "from":r_ents["main"],"to":r_ents["depend"]})
+           
+        #find main realation
+        banned = sent_soch_rel + relat_rel #exclude found nodes
+        main_ents = self.find_entities(tree_root,banned)
+        main_rel_dict = {"relation": tree_root.value["value"], "from" : main_ents["main"], "to": main_ents["depend"]}
+
+        #for each entitiy find attributes
+
+        result = sent_soch_dicts + relat_rel_dicts
+        result.append(main_rel_dict)
+        return result
 
 
 class TreeHelper():

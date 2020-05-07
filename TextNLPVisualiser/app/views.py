@@ -176,11 +176,13 @@ def application(request):
 
 from django.views.decorators.csrf import csrf_exempt
 from syntax import syntax_analize
+from ERAFinder import ERAFinder
 
 @csrf_exempt
 def process(request):
     assert isinstance(request, HttpRequest)
     input = request.GET["val"]
-    result = syntax_analize(input)  
+    eraf = ERAFinder(BASE_DIR)
+    result = eraf.analize(input)
     return JsonResponse({'result': result})  
   
